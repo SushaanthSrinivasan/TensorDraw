@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 
-# Define the CNN architecture
 class SimpleCNN(nn.Module):
     def __init__(self):
         super(SimpleCNN, self).__init__()
@@ -19,17 +18,12 @@ class SimpleCNN(nn.Module):
         x = self.conv2(x)
         x = self.relu(x)
         x = self.pool(x)
-        x = x.view(-1, 32 * 7 * 7)  # Flatten
+        x = x.view(-1, 32 * 7 * 7)
         x = self.fc1(x)
         x = self.relu(x)
         x = self.fc2(x)
         return x
 
-# Instantiate the model
 model = SimpleCNN()
-
-# Print the model architecture
 print(model)
-
-# Save the model to a file
-torch.save(model.state_dict(), 'simple_cnn_model.pth')
+torch.save(model.state_dict(), 'test_model.pth')

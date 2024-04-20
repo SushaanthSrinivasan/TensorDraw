@@ -1,15 +1,9 @@
 import torch
 import torch.nn as nn
 import sys
-import os
-import glob
-
 sys.path.append("./")
+from tensordraw import *
 
-from PlotNeuralNet.pycore.tikzeng import *
-from helpers import *
-
-# Define the CNN architecture
 class SimpleCNN(nn.Module):
     def __init__(self):
         super(SimpleCNN, self).__init__()
@@ -27,36 +21,12 @@ class SimpleCNN(nn.Module):
         x = self.conv2(x)
         x = self.relu(x)
         x = self.pool(x)
-        x = x.view(-1, 32 * 7 * 7)  # Flatten
+        x = x.view(-1, 32 * 7 * 7)
         x = self.fc1(x)
         x = self.relu(x)
         x = self.fc2(x)
         return x
 
-# Load the saved model
 model = SimpleCNN()
-model.load_state_dict(torch.load('test_model.pth'))
 
-arch = [
-    to_head( './PlotNeuralNet' ),
-    to_cor(),
-    to_begin()
-]
-
-# Extract information about each layer
-print("Layer Information:")
-for name, layer in model.named_children():
-
-
-    if isinstance(layer, nn.Conv2d):
-        arch.append(to_Conv(name, layer.out_channels, layer.kernel_size, offset="(0,0,0)", to="(0,0,0)", height=64, depth=64, width=2))
-
-        
-arch.append(to_end())
-filename = "testarch"
-to_generate(arch, f'{filename}.tex')
-
-run_pdflatex(f'{filename}.tex')
-
-open_pdf(f"{filename}.pdf")
-cleanup_files('.')
+draw_network(model, 'test_model.pth', 'torch')
